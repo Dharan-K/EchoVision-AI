@@ -1,0 +1,63 @@
+# AI Vision Assistant Configuration
+# Optimized for CPU and integrated GPUs
+
+# Model Settings
+model:
+  yolo_model: "yolov8n"  # nano model for CPU (yolov8n, yolov8s, yolov8m)
+  caption_model: "Salesforce/blip-image-captioning-base"  # lightweight captioning model
+  confidence_threshold: 0.5
+  iou_threshold: 0.4
+
+# Performance Settings (CPU Optimization)
+performance:
+  frame_skip: 2  # Process every 2nd frame (speeds up on CPU)
+  target_fps: 15  # Target FPS for CPU
+  enable_multithreading: true
+  thread_pool_size: 4
+  model_precision: "fp32"  # Use fp32 for CPU (no GPU optimization needed)
+
+# Detection Settings
+detection:
+  classes_to_detect: ["person", "pen", "pencil", "bottle", "watch", "phone", "laptop", "cup", "book"]
+  only_show_detected_classes: false  # Set true to filter to only above classes
+  max_objects_track: 50  # Maximum objects to track simultaneously
+
+# Display Settings
+display:
+  show_fps: true
+  show_confidence: true
+  show_labels: true
+  show_description: true
+  box_thickness: 2
+  font_size: 0.6
+  text_color: [0, 255, 0]  # BGR format (Green)
+  box_color: [0, 255, 0]
+
+# Speech Settings
+speech:
+  enable_tts: true
+  speak_on_change_only: true  # Only speak when description changes
+  speech_rate: 150
+  volume: 1.0
+
+# Logging Settings
+logging:
+  enable_logging: true
+  log_file: "logs/detections.log"
+  save_statistics: true
+  stats_file: "logs/statistics.json"
+  log_interval: 100  # Log every N frames
+
+# Webcam Settings
+webcam:
+  camera_index: 0
+  frame_width: 640
+  frame_height: 480
+  fps: 30
+
+# API Settings (for FastAPI backend)
+api:
+  enable_api: true
+  api_host: "127.0.0.1"
+  api_port: 8000
+  api_debug: false
