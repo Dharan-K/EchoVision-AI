@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session History - EchoVision</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">EchoVision</div>
+        <div class="nav-links">
+            <a href="/">Overview</a>
+            <a href="/session" class="active">Session</a>
+            <a href="/objects-page">Objects</a>
+        </div>
+        <a href="/" class="btn-primary">Back to Live</a>
+    </nav>
+
+    <div class="session-bar">
+        <span class="session-bar-title">SESSIONS</span>
+        <div class="session-list" id="sessionList">
+            {% for session in sessions %}
+            <span class="session-pill {% if loop.last and session.ended_at is none %}active{% endif %}">
+                Session {{ session.session_number }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div class="hero">
+            <h1>Session History</h1>
+            <p class="subtitle">View all your detection sessions and their details</p>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            {% if sessions %}
+                {% for session in sessions|reverse %}
+                <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h3 style="margin: 0 0 0.5rem 0;">Session {{ session.session_number }}</h3>
+                            <p style="color: var(--muted); font-size: 0.9rem; margin: 0;">
+                                ID: {{ session.session_id[:8] }}...
+                            </p>
+                        </div>
+                        <span class="{% if session.ended_at %}status-inactive{% else %}status-active{% endif %}">
+                            {% if session.ended_at %}Ended{% else %}Active{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <div>
+                            <p style="color: var(--muted); font-size: 0.85rem; margin: 0 0 0.25rem 0;">Started</p>
+                            <p style="margin: 0; font-weight: 500;">{{ session.started_at }}</p>
+                        </div>
+                        {% if session.ended_at %}
+                        <div>
+                            <p style="color: var(--muted); font-size: 0.85rem; margin: 0 0 0.25rem 0;">Ended</p>
+                            <p style="margin: 0; font-weight: 500;">{{ session.ended_at }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="card" style="text-align: center; padding: 3rem;">
+                    <p style="color: var(--muted); margin: 0;">No sessions yet. Start a new session to begin detecting objects.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

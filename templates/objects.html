@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detected Objects - EchoVision</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">EchoVision</div>
+        <div class="nav-links">
+            <a href="/">Overview</a>
+            <a href="/session">Session</a>
+            <a href="/objects-page" class="active">Objects</a>
+        </div>
+        <a href="/" class="btn-primary">Back to Live</a>
+    </nav>
+
+    <div class="session-bar">
+        <span class="session-bar-title">SESSIONS</span>
+        <div class="session-list" id="sessionList"></div>
+    </div>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div class="hero">
+            <h1>Detected Objects</h1>
+            <p class="subtitle">All objects detected in the current session with AI-generated descriptions</p>
+        </div>
+
+        <div class="objects-grid" id="objectsGrid" style="margin-top: 2rem;">
+            {% if objects %}
+                {% for obj in objects %}
+                <div class="object-card">
+                    <div class="object-header">
+                        <h3 class="object-name">{{ obj.class }}</h3>
+                        <span class="object-count">Count: {{ obj.count }}</span>
+                    </div>
+                    <p class="object-meta">Last seen: {{ obj.last_seen }}</p>
+                    
+                    {% if obj.description %}
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                        <p style="color: var(--muted); font-size: 0.85rem; margin: 0 0 0.5rem 0;">AI Description</p>
+                        <p style="margin: 0; line-height: 1.6;">{{ obj.description }}</p>
+                    </div>
+                    {% else %}
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                        <p style="color: var(--muted); font-size: 0.85rem; margin: 0;">Description will be generated automatically...</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="card" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <p style="color: var(--muted); margin: 0;">No objects detected yet. Start a session and camera to begin detecting objects.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Poll for session updates
+        async function pollSessions() {
+            try {
+                const response = await fetch('/sessions');
+                const data = await response.json();
+                renderSessions(data.sessions);
+            } catch (error) {
+                console.error('Failed to fetch sessions:', error);
+            }
+        }
+
+        function renderSessions(sessions) {
+            const sessionList = document.getElementById('sessionList');
+            sessionList.innerHTML = sessions.map(session => 
+                `<span class="session-pill ${!session.ended_at ? 'active' : ''}">Session ${session.session_number}</span>`
+            ).join('');
+        }
+
+        // Poll for object updates
+        async function pollObjects() {
+            try {
+                const response = await fetch('/objects');
+                const data = await response.json();
+                renderObjects(data.objects);
+            } catch (error) {
+                console.error('Failed to fetch objects:', error);
+            }
+        }
+
+        function renderObjects(objects) {
+            const grid = document.getElementById('objectsGrid');
+            if (objects.length === 0) {
+                grid.innerHTML = `
+                    <div class="card" style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <p style="color: var(--muted); margin: 0;">No objects detected yet. Start a session and camera to begin detecting objects.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = objects.map(obj => `
+                <div class="object-card">
+                    <div class="object-header">
+                        <h3 class="object-name">${obj.class}</h3>
+                        <span class="object-count">Count: ${obj.count}</span>
+                    </div>
+                    <p class="object-meta">Last seen: ${obj.last_seen}</p>
+                    
+                    ${obj.description ? `
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                            <p style="color: var(--muted); font-size: 0.85rem; margin: 0 0 0.5rem 0;">AI Description</p>
+                            <p style="margin: 0; line-height: 1.6;">${obj.description}</p>
+                        </div>
+                    ` : `
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                            <p style="color: var(--muted); font-size: 0.85rem; margin: 0;">Generating description...</p>
+                        </div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        // Start polling
+        pollSessions();
+        pollObjects();
+        setInterval(pollSessions, 2000);
+        setInterval(pollObjects, 2000);
+    </script>
+</body>
+</html>

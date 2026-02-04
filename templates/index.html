@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EchoVision AI</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">EchoVision</div>
+    <nav class="nav-links">
+      <a href="/">Overview</a>
+      <a href="/session">Session</a>
+      <a href="/objects-page">Objects</a>
+    </nav>
+    <button id="startBtn" class="btn primary">New Session</button>
+  </header>
+
+  <section class="session-bar">
+    <div class="session-bar-title">Sessions</div>
+    <div id="sessionList" class="session-list"></div>
+  </section>
+
+  <main class="container">
+    <section id="overview" class="hero">
+      <div class="hero-text">
+        <h1>Real-Time Vision, Human-First Design</h1>
+        <p>
+          A clean, fast, and session-based AI vision assistant that detects objects,
+          generates descriptions, and keeps your workflow organized.
+        </p>
+        <div class="hero-actions">
+          <button id="heroStartBtn" class="btn primary">Start Camera</button>
+          <button id="stopBtn" class="btn ghost">Stop Camera</button>
+          <button id="endSessionBtn" class="btn ghost">End Session</button>
+        </div>
+        <div class="status">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Idle — camera off</span>
+          <span id="sessionId" class="session-id"></span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="card-title">Live Session</div>
+        <div class="video-wrap" id="videoWrap">
+          <div class="video-placeholder">Camera is off</div>
+          <img id="videoFeed" alt="video feed" />
+        </div>
+        <div class="caption-box">
+          <span class="caption-label">Live Description</span>
+          <p id="captionText">Start a session to see the description.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="session" class="section">
+      <div class="section-header">
+        <h2>Session Controls</h2>
+        <p>Start a session once, then toggle the camera on/off as needed. Objects persist for the session.</p>
+      </div>
+      <div class="controls">
+        <button id="startBtnSecondary" class="btn primary">New Session</button>
+        <button id="stopBtnSecondary" class="btn ghost">Stop Camera</button>
+        <button id="endSessionBtnSecondary" class="btn ghost">End Session</button>
+      </div>
+    </section>
+
+    <section id="objects" class="section">
+      <div class="section-header">
+        <h2>Detected Objects</h2>
+        <p>Click an object to generate an AI description about it.</p>
+      </div>
+      <div id="objectList" class="object-grid"></div>
+      <div class="object-detail">
+        <div class="object-detail-title">Object Description</div>
+        <div id="objectDescription" class="object-detail-text">Select an object to describe it.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>EchoVision AI — Modern, modular, and session-based.</span>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

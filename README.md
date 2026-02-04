@@ -43,6 +43,51 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Web App (Session-Based)
+
+### Start the web server
+```bash
+uvicorn webapp:app --host 127.0.0.1 --port 8000
+```
+
+Open your browser at http://127.0.0.1:8000
+
+### Web Features
+- Start/Stop camera per session
+- Session-specific object list
+- Click object to get AI description
+
+## Optional: OpenRouter AI Descriptions
+
+Set your API key as an environment variable (do not hardcode it):
+
+Windows PowerShell:
+```bash
+$env:OPENROUTER_API_KEY="YOUR_KEY_HERE"
+```
+
+Optional:
+```bash
+$env:OPENROUTER_MODEL="deepseek/deepseek-r1-0528:free"
+$env:OPENROUTER_SITE_URL="http://127.0.0.1:8000"
+$env:OPENROUTER_SITE_TITLE="EchoVision AI"
+```
+
+## Optional: MongoDB Session Storage
+
+Set your MongoDB connection string in an environment variable (do not hardcode it):
+
+Windows PowerShell:
+```bash
+$env:MONGODB_URI="YOUR_MONGODB_URI"
+```
+
+Optional database settings:
+```bash
+$env:MONGODB_DB="echovision"
+$env:MONGODB_COLLECTION="sessions"
+```
+
 ### Controls
 - SPACE = Pause/Resume
 - Q = Quit
