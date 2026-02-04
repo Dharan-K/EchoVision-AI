@@ -28,6 +28,21 @@ let sessionActive = false;
 let cameraActive = false;
 let currentSessionId = "";
 let pollingInterval = null;
+let streamInterval = null;
+
+function startVideoStream() {
+  if (streamInterval) clearInterval(streamInterval);
+  streamInterval = setInterval(() => {
+    if (cameraActive) {
+      videoFeed.src = "/stream?t=" + Date.now();
+    }
+  }, 100); // Update every 100ms
+}
+
+function stopVideoStream() {
+  if (streamInterval) clearInterval(streamInterval);
+  streamInterval = null;
+}
 
 function setActiveState(isSessionActive, isCameraActive, session) {
   sessionActive = isSessionActive;
@@ -41,9 +56,10 @@ function setActiveState(isSessionActive, isCameraActive, session) {
 
   if (isCameraActive) {
     videoFeed.style.display = "block";
-    videoFeed.src = "/stream";
     videoWrap.querySelector(".video-placeholder").style.display = "none";
+    startVideoStream();
   } else {
+    stopVideoStream();
     videoFeed.style.display = "none";
     videoFeed.src = "";
     videoWrap.querySelector(".video-placeholder").style.display = "block";
