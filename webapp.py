@@ -439,6 +439,7 @@ app = FastAPI(title="AI Vision Assistant Webapp")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+# Initialize manager immediately to avoid startup event issues
 manager = CameraSessionManager()
 
 
